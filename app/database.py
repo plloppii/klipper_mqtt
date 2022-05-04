@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from config import get_settings
+from .config import get_settings
 
 config = get_settings()
 postgres_url = "postgresql://{}:{}@{}/{}".format(

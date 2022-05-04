@@ -2,11 +2,11 @@ from fastapi import FastAPI,status,HTTPException,Depends
 from pydantic import BaseModel,Json
 from sqlalchemy.orm import Session
 from typing import Optional,List
-from database import SessionLocal
-import models, schema, crud
+from .database import SessionLocal
+from . import models, schema, crud
+from . import mqtt as mymqtt
 
 import paho.mqtt.client as mqtt
-import mqtt as mymqtt
 
 app=FastAPI()
 

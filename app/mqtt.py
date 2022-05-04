@@ -1,8 +1,8 @@
 import paho.mqtt.client as mqtt
 import json
-from database import SessionLocal
-from config import get_settings
-import schema, crud
+from .database import SessionLocal
+from .config import get_settings
+from . import schema, crud
 import time
 
 config = get_settings()

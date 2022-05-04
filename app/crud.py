@@ -1,6 +1,6 @@
 from typing import List
 from sqlalchemy.orm import Session
-import models, schema
+from . import models, schema
 
 def get_all_print_history(db: Session):
     return db.query(models.Print_History).all()
