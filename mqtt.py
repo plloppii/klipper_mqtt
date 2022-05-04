@@ -3,6 +3,7 @@ import json
 from database import SessionLocal
 from config import get_settings
 import schema, crud
+import time
 
 config = get_settings()
 db = SessionLocal()
@@ -24,10 +25,8 @@ JSONRPC_REQUEST= """
 class MyClient(mqtt.Client):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # custom initialization
         self.username_pw_set(config.MOSQUITTO_MQTT_BROKER_USERNAME, config.MOSQUITTO_MQTT_BROKER_PASSWORD)
         self.connect_async(config.MOSQUITTO_MQTT_BROKER_HOST, config.MOSQUITTO_MQTT_BROKER_PORT, 60)
-        # self.loop_forever()
         self.loop_start()
 
     def on_connect(self, client, userdata, flags, rc):
@@ -54,8 +53,8 @@ class MyClient(mqtt.Client):
                     file_name = line_item.get("filename"),
                     file_size = metadata.get("size"),
                     status = line_item.get("status"),
-                    start_time = line_item.get("start_time"),
-                    end_time = line_item.get("end_time"),
+                    start_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(line_item.get("start_time"))),
+                    end_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(line_item.get("end_time"))),
                     print_duration = line_item.get("print_duration"),
                     total_duration = line_item.get("total_duration"),
                     slicer_estimated_time = line_item.get("print_duration"),

@@ -1,14 +1,14 @@
 from datetime import datetime
-from typing import List, Optional
-from pydantic import BaseModel, Json
+from typing import List, Optional, Dict
+from pydantic import BaseModel
 
 class Print_History(BaseModel):
     machine_id:Optional[str]
     job_id:str
     file_name:str
     status:str
-    start_time:int
-    end_time:Optional[int]
+    start_time:datetime
+    end_time:Optional[datetime]
     print_duration:int
     total_duration:int
     slicer_estimated_time:int
@@ -20,7 +20,7 @@ class Print_History(BaseModel):
     first_layer_height:Optional[str]
     first_layer_bed_temp:Optional[str]
     object_height:Optional[int]
-    print_metadata:Optional[Json]
+    print_metadata:Optional[Dict]
 
     class Config:
         orm_mode=True

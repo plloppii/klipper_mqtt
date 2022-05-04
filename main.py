@@ -26,17 +26,16 @@ def index():
 
 @app.get('/print_history',response_model=List[schema.Print_History],status_code=200)
 def get_all(db: Session = Depends(get_db)):
-    return crud.get_all_print_history()
+    return crud.get_all_print_history(db)
 
-# @app.get('/print_history/{job_id}',response_model=schema.Print_History,status_code=status.HTTP_200_OK)
-# def get_an_item(job_id: int, db: Session = Depends(get_db)):
-#     return crud.get_print_by_job_id(db, job_id)
+@app.get('/print_history/{job_id}',response_model=schema.Print_History,status_code=status.HTTP_200_OK)
+def get_an_item(job_id: str, db: Session = Depends(get_db)):
+    return crud.get_print_by_job_id(db, job_id)
 
-@app.get('/print_history/fetch', status_code=status.HTTP_200_OK)
+@app.get('/fetch/print_history', status_code=status.HTTP_200_OK)
 def fetch_print_history(db:Session=Depends(get_db)):
     client.fetch_all_print_history()
     return {"message": "Fetched Print History"}
-
 
 # @app.get('/machine/fetch', response_model=schema.Machine, status_code=status.HTTP_201_CREATED)
 # def fetch_machines(db: Session = Depends(get_db)):

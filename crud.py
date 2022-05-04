@@ -1,7 +1,5 @@
 from sqlalchemy.orm import Session
 import models, schema
-import time
-
 
 def get_all_print_history(db: Session):
     return db.query(models.Print_History).all()
@@ -16,8 +14,8 @@ def create_print_history_item(db: Session, line_item: schema.Print_History):
         file_name = line_item.file_name,
         file_size = line_item.file_size,
         status = line_item.status,
-        start_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(line_item.start_time)),
-        end_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(line_item.end_time)),
+        start_time =line_item.start_time,
+        end_time = line_item.end_time,
         print_duration = line_item.print_duration,
         total_duration = line_item.total_duration,
         slicer_estimated_time = line_item.print_duration,
