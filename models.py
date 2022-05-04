@@ -1,7 +1,17 @@
 from sqlite3 import Date
-from database import Base
+from sqlalchemy.orm import declarative_base
 from sqlalchemy import String,Boolean,Integer,Column,Text,JSON,DateTime
 from sqlalchemy.sql import func
+
+Base=declarative_base()
+
+class Machine(Base):
+    __tablename__='machine'
+    id=Column(Integer, primary_key=True)
+    bot_number=Column(Integer, unique=True)
+    mqtt_instance=Column(String,unique=True)
+    platform_type=Column(String)
+    customer=Column(String)
 
 class Print_History(Base):
     __tablename__='print_history'
