@@ -37,6 +37,17 @@ def fetch_print_history(db:Session=Depends(get_db)):
     client.fetch_all_print_history()
     return {"message": "Fetched Print History"}
 
+@app.post('/machine', response_model=List[schema.Machine], status_code=status.HTTP_201_CREATED)
+def create_machine(new_machines: List[schema.Machine], db:Session=Depends(get_db)):
+    non_existing_machines = []
+    for m in new_machines:
+        existing_machine=crud.get_machine_by_id(db, m.bot_number)
+        if not existing_machine: non_existing_machines.append(m)
+    if not non_existing_machines:
+        raise HTTPException(status_code=400,detail="All requested machines already exists")
+    created_machines = crud.create_machines(db, non_existing_machines)
+    return created_machines
+
 # @app.get('/machine/fetch', response_model=schema.Machine, status_code=status.HTTP_201_CREATED)
 # def fetch_machines(db: Session = Depends(get_db)):
 #     return "Fetch machines endpoint"

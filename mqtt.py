@@ -33,7 +33,7 @@ class MyClient(mqtt.Client):
         print("Connected with result code "+str(rc))
         for inst in TOPIC_INSTANCES:
             client.subscribe(inst+API_RESPONSE_TOPIC)
-        # client.subscribe(WILDCARD_TOPIC)
+        client.subscribe(WILDCARD_TOPIC)
 
     def on_message(self, client, userdata, message):
         print("{}, {}".format(message.topic, message.payload))
@@ -49,6 +49,7 @@ class MyClient(mqtt.Client):
                     continue
                 metadata = line_item.get("metadata", {})
                 print_item = schema.Print_History(
+                    machine_id = topic,
                     job_id = job_id,
                     file_name = line_item.get("filename"),
                     file_size = metadata.get("size"),
@@ -65,13 +66,14 @@ class MyClient(mqtt.Client):
                     first_layer_height = metadata.get("first_layer_height"),
                     first_layer_bed_temp = metadata.get("first_layer_bed_temp"),
                     object_height = metadata.get("object_height"),
-                    print_metadata = json.dumps(metadata)
+                    print_metadata = metadata
                 )
                 crud.create_print_history_item(db, print_item)
 
     def fetch_all_print_history(self):
-        for inst in TOPIC_INSTANCES:
-            self.publish(inst+API_REQUEST_TOPIC, JSONRPC_REQUEST)
+        all_machines = crud.get_machines(db)
+        for machine in all_machines:
+            self.publish(machine.mqtt_instance+"/"+API_REQUEST_TOPIC, JSONRPC_REQUEST)
 
 
 # client = MyClient(client_id="", clean_session=True, userdata=None, protocol=mqtt.MQTTv311, transport="tcp")

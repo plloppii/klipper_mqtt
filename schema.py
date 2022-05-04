@@ -2,6 +2,15 @@ from datetime import datetime
 from typing import List, Optional, Dict
 from pydantic import BaseModel
 
+class Machine(BaseModel):
+    bot_number:int
+    mqtt_instance:str
+    platform_type:str
+    customer:Optional[str]
+
+    class Config:
+        orm_mode=True
+
 class Print_History(BaseModel):
     machine_id:Optional[str]
     job_id:str

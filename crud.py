@@ -1,3 +1,4 @@
+from typing import List
 from sqlalchemy.orm import Session
 import models, schema
 
@@ -10,6 +11,7 @@ def get_print_by_job_id(db: Session, job_id: str):
 def create_print_history_item(db: Session, line_item: schema.Print_History):
     print(line_item.print_metadata)
     print_item = models.Print_History(
+        machine_id = line_item.machine_id,
         job_id = line_item.job_id,
         file_name = line_item.file_name,
         file_size = line_item.file_size,
@@ -30,4 +32,24 @@ def create_print_history_item(db: Session, line_item: schema.Print_History):
     )
     db.add(print_item)
     db.commit()
+
+def create_machines(db:Session, machines:List[schema.Machine]):
+    created=[]
+    for m in machines:
+        new_machine = models.Machine(
+            bot_number=m.bot_number,
+            mqtt_instance=m.mqtt_instance,
+            platform_type=m.platform_type,
+            customer=m.customer
+        )
+        created.append(new_machine)
+        db.add(new_machine)
+    db.commit()
+    return created
+
+def get_machine_by_id(db:Session, bot_number:int):
+    return db.query(models.Machine).filter(models.Machine.bot_number == bot_number).first()
+
+def get_machines(db:Session):
+    return db.query(models.Machine).all()
     
