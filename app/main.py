@@ -48,9 +48,9 @@ def create_machine(new_machines: List[schema.Machine], db:Session=Depends(get_db
     created_machines = crud.create_machines(db, non_existing_machines)
     return created_machines
 
-# @app.get('/machine/fetch', response_model=schema.Machine, status_code=status.HTTP_201_CREATED)
-# def fetch_machines(db: Session = Depends(get_db)):
-#     return "Fetch machines endpoint"
+@app.get('/machine', response_model=List[schema.Machine], status_code=status.HTTP_201_CREATED)
+def fetch_machines(db: Session = Depends(get_db)):
+    return crud.get_machines(db)
 
 
 @app.post('/items',response_model=schema.Print_History, status_code=status.HTTP_201_CREATED)
