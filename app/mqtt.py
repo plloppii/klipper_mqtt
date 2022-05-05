@@ -31,8 +31,9 @@ class MyClient(mqtt.Client):
 
     def on_connect(self, client, userdata, flags, rc):
         print("Connected with result code "+str(rc))
-        for inst in TOPIC_INSTANCES:
-            client.subscribe(inst+API_RESPONSE_TOPIC)
+        all_machines = crud.get_machines(db)
+        for m in all_machines:
+            client.subscribe(m.mqtt_instance+"/"+API_RESPONSE_TOPIC)
         client.subscribe(WILDCARD_TOPIC)
 
     def on_message(self, client, userdata, message):
