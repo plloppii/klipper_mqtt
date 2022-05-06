@@ -3,8 +3,8 @@ from pydantic import BaseModel,Json
 from sqlalchemy.orm import Session
 from typing import Optional,List
 from .database import SessionLocal
+from .mqtt import mqtt_client
 from . import models, schema, crud
-from . import mqtt as mymqtt
 
 import paho.mqtt.client as mqtt
 
@@ -17,8 +17,6 @@ def get_db():
         yield db
     finally:
         db.close()
-
-client=mymqtt.MyClient(client_id="", clean_session=True, userdata=None, protocol=mqtt.MQTTv311, transport="tcp")
 
 @app.get('/')
 def index():
@@ -34,7 +32,7 @@ def get_an_item(job_id: str, db: Session = Depends(get_db)):
 
 @app.get('/fetch/print_history', status_code=status.HTTP_200_OK)
 def fetch_print_history(db:Session=Depends(get_db)):
-    client.fetch_all_print_history()
+    mqtt_client.fetch_all_print_history()
     return {"message": "Fetched Print History"}
 
 @app.post('/machine', response_model=List[schema.Machine], status_code=status.HTTP_201_CREATED)
@@ -46,6 +44,7 @@ def create_machine(new_machines: List[schema.Machine], db:Session=Depends(get_db
     if not non_existing_machines:
         raise HTTPException(status_code=400,detail="All requested machines already exists")
     created_machines = crud.create_machines(db, non_existing_machines)
+    mqtt_client.subscribe_to_instances(created_machines)
     return created_machines
 
 @app.get('/machine', response_model=List[schema.Machine], status_code=status.HTTP_201_CREATED)

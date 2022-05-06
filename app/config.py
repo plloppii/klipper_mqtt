@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     POSTGRES_USERNAME:str
     POSTGRES_PASSWORD:str
     POSTGRES_HOST:str
-    POSTGRES_SCHEMA:str
+    POSTGRES_DB:str
 
     class Config:
         env_file = "config/dev.env"

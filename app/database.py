@@ -8,7 +8,7 @@ postgres_url = "postgresql://{}:{}@{}/{}".format(
         config.POSTGRES_USERNAME, 
         config.POSTGRES_PASSWORD,
         config.POSTGRES_HOST,
-        config.POSTGRES_SCHEMA
+        config.POSTGRES_DB
     )
 
 engine = create_engine(postgres_url, echo=True)

@@ -1,5 +1,6 @@
 import paho.mqtt.client as mqtt
 import json
+from typing import List
 from .database import SessionLocal
 from .config import get_settings
 from . import schema, crud
@@ -34,7 +35,7 @@ class MyClient(mqtt.Client):
         all_machines = crud.get_machines(db)
         for m in all_machines:
             client.subscribe(m.mqtt_instance+"/"+API_RESPONSE_TOPIC)
-        client.subscribe(WILDCARD_TOPIC)
+        # client.subscribe(WILDCARD_TOPIC)
 
     def on_message(self, client, userdata, message):
         print("{}, {}".format(message.topic, message.payload))
@@ -75,6 +76,9 @@ class MyClient(mqtt.Client):
         all_machines = crud.get_machines(db)
         for machine in all_machines:
             self.publish(machine.mqtt_instance+"/"+API_REQUEST_TOPIC, JSONRPC_REQUEST)
+    def subscribe_to_instances(self, machine_inst:List[schema.Machine]):
+        for m in machine_inst:
+            self.subscribe(m.mqtt_instance+"/"+API_RESPONSE_TOPIC)
 
 
-# client = MyClient(client_id="", clean_session=True, userdata=None, protocol=mqtt.MQTTv311, transport="tcp")
+mqtt_client = MyClient(client_id="", clean_session=True, userdata=None, protocol=mqtt.MQTTv311, transport="tcp")
