@@ -1,9 +1,7 @@
-version: "3.9"
+version: "3.6"
 services:
-  base:
-    build: .
   web:
-    extends: base
+    build: .
     ports:
       - "8000:8000"
     command: docker-entrypoint
@@ -18,7 +16,7 @@ services:
     volumes:
       - postgres:/var/lib/postgresql/data
   migrate:
-    extends: base
+    build: .
     command: docker-migrate
 volumes:
     postgres:
